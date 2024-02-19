@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Formik } from "formik";
-import { Button, Container, TextField, Typography } from "@mui/material";
+import { Alert, Button, Container, TextField, Typography } from "@mui/material";
 import * as Yup from "yup";
 import Link from "next/link";
 import { base_url } from "@/src/config";
@@ -62,9 +62,12 @@ function Register() {
               }),
             })
               .then(async (res) => {
-                const content = await res.json();
-                if (res.status) {
+                const { errors } = await res.json();
+                if (res.ok) {
                   router.push("/login");
+                }
+                if (errors) {
+                  actions.setErrors({ ...errors });
                 }
               })
               .finally(() => {
@@ -107,7 +110,11 @@ function Register() {
                     props.setFieldValue("passwordConfirm", val.target.value);
                   }}
                 />
-
+                {Object.values(props.errors).length > 0 && (
+                  <Alert style={{ marginTop: "10px" }} severity="error">
+                    {Object.values(props.errors).join(", ")}
+                  </Alert>
+                )}
                 <Button
                   style={{ width: "100%", marginTop: "10px" }}
                   disabled={loading}

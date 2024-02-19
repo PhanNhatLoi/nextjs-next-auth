@@ -1,12 +1,13 @@
 "use client";
 import React, { useState } from "react";
 import { Formik } from "formik";
-import { Button, Container, TextField, Typography } from "@mui/material";
+import { Alert, Button, Container, TextField, Typography } from "@mui/material";
 import * as Yup from "yup";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 function Register() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -18,6 +19,7 @@ function Register() {
       .min(6, "password min 6 characters"),
   });
 
+  const params = useSearchParams();
   const router = useRouter();
   return (
     <Container
@@ -44,7 +46,7 @@ function Register() {
         }}
       >
         <Formik
-          initialValues={{ email: "", password: "" }}
+          initialValues={{ email: "", password: "", submit: null }}
           onSubmit={async (values, actions) => {
             setLoading(true);
             signIn("credentials", {
@@ -54,7 +56,20 @@ function Register() {
             })
               .then((res) => {
                 if (res?.ok || !res?.error) {
-                  router.push(DEFAULT_LOGIN_REDIRECT);
+                  router.push(
+                    params.get("callbackUrl") || DEFAULT_LOGIN_REDIRECT
+                  );
+                }
+                if (res?.error) {
+                  switch (res?.error) {
+                    case "CredentialsSignin":
+                      actions.setErrors({ submit: "Email or password wrong!" });
+                      break;
+
+                    default:
+                      actions.setErrors({ submit: "Server error" });
+                      break;
+                  }
                 }
               })
               .finally(() => {
@@ -73,6 +88,7 @@ function Register() {
                 onChange={(val) => {
                   props.setFieldValue("email", val.target.value);
                 }}
+                error={!!props.errors.email}
               />
 
               <TextField
@@ -81,11 +97,17 @@ function Register() {
                 label="Password"
                 variant="standard"
                 type="password"
+                error={!!props.errors.password}
                 onChange={(val) => {
                   props.setFieldValue("password", val.target.value);
                 }}
               />
 
+              {Object.values(props.errors).length > 0 && (
+                <Alert style={{ marginTop: "10px" }} severity="error">
+                  {Object.values(props.errors).join(", ")}
+                </Alert>
+              )}
               <Button
                 style={{ width: "100%", marginTop: "10px" }}
                 disabled={loading}

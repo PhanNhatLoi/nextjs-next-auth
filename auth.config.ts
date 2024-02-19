@@ -1,7 +1,9 @@
 import type { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import Users from "./src/models/userModel";
-import { compareSync } from "bcrypt-ts";
+const base_url =
+  process.env.NODE_ENV !== "production"
+    ? "http://localhost:3000"
+    : process.env.base_url;
 
 export default {
   providers: [
@@ -12,10 +14,15 @@ export default {
       },
       async authorize(credentials) {
         if (credentials.email && credentials.password) {
-          const user = await Users.findOne({ email: credentials?.email || "" });
-          const password = credentials.password || "";
-          const isMatch = await compareSync(password.toString(), user.password);
-          if (isMatch) {
+          const response = await fetch(`${base_url}/api/auth/login`, {
+            method: "POST",
+            body: JSON.stringify({
+              email: credentials.email,
+              password: credentials.password,
+            }),
+          });
+          if (response.ok) {
+            const { user } = await response.json();
             return user;
           }
         }

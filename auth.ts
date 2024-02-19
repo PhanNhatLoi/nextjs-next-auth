@@ -13,20 +13,15 @@ export const {
     error: "/auth/error",
   },
   callbacks: {
-    async session({ session, token }: { session: any; token: any }) {
-      if (session.user) {
-        session.user = { ...token };
-      }
-      return session;
-    },
     async jwt({ token }) {
       if (token.sub) {
-        const user = await Users.findById(token.sub);
-        const { email, password, _id } = user;
-        token.email = email;
-        (token.password = password), (token._id = _id);
+        // to do query row and add custom params
       }
       return token;
+    },
+    async session({ session }) {
+      // add params after use token.sub
+      return session;
     },
   },
 
