@@ -7,7 +7,6 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 
 function Register() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -19,7 +18,6 @@ function Register() {
       .min(6, "password min 6 characters"),
   });
 
-  const params = useSearchParams();
   const router = useRouter();
   return (
     <Container
@@ -56,9 +54,7 @@ function Register() {
             })
               .then((res) => {
                 if (res?.ok || !res?.error) {
-                  router.push(
-                    params.get("callbackUrl") || DEFAULT_LOGIN_REDIRECT
-                  );
+                  router.push(DEFAULT_LOGIN_REDIRECT);
                 }
                 if (res?.error) {
                   switch (res?.error) {
