@@ -1,132 +1,130 @@
 "use client";
-import {
-  Alert,
-  Button,
-  Container,
-  Grid,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { Formik } from "formik";
 import React, { useState } from "react";
+import { Formik } from "formik";
+import { Button, Container, TextField, Typography } from "@mui/material";
 import * as Yup from "yup";
-import { registerApi } from "../actions/register";
+import Link from "next/link";
+import { base_url } from "@/src/config";
 import { useRouter } from "next/navigation";
 
-const RegisterPage = () => {
+function Register() {
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
+
   const schema = Yup.object({
-    email: Yup.string().email("email validate").required("required field"),
+    email: Yup.string().email("email invalid").required("Required field"),
     password: Yup.string()
-      .required("field required")
+      .required("Required password")
       .min(6, "password min 6 characters"),
-    confirmPassword: Yup.string().when("password", {
+    passwordConfirm: Yup.string().when("password", {
       is: (val: string) => (val && val.length > 0 ? true : false),
       then: () =>
-        Yup.string().oneOf([Yup.ref("password")], "password not match"),
+        Yup.string().oneOf(
+          [Yup.ref("password")],
+          "Password not match".toString()
+        ),
     }),
   });
+
   return (
     <Container
+      maxWidth={false}
       sx={{
         mt: 3,
+        display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        display: "flex",
         flexWrap: "wrap",
       }}
     >
-      <Grid sx={{ width: "100%", textAlign: "center" }}>
-        <Typography fontSize={30}>Register</Typography>
-      </Grid>
-      <Formik
-        initialValues={{ email: "", password: "", confirmPassword: "" }}
-        onSubmit={(values, actions) => {
-          setLoading(true);
-          registerApi({ email: values.email, password: values.password })
-            .then((res: any) => {
-              if (!res.status) {
-                actions.setErrors(res.content.errors);
-              } else {
-                router.push("/login");
-              }
-            })
-            .catch((err) => console.log(err))
-            .finally(() => {
-              setLoading(false);
-            });
-        }}
-        validationSchema={schema}
+      <Typography
+        style={{ width: "100%", textAlign: "center", fontSize: "25px" }}
       >
-        {(props) => (
-          <form onSubmit={props.handleSubmit}>
-            <Grid
-              width={"100%"}
-              sx={{
-                justifyContent: "center",
-                alignItems: "center",
-                display: "flex",
-                flexWrap: "wrap",
-              }}
-            >
-              <TextField
-                variant="outlined"
-                size="small"
-                label="email"
-                fullWidth
-                onChange={(e) => {
-                  props.setFieldValue("email", e.target.value);
-                }}
-                sx={{ mb: "10px" }}
-                error={Boolean(props.errors.email)}
-              />
+        <span>Register</span>
+      </Typography>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        <Formik
+          initialValues={{ email: "", password: "", passwordConfirm: "" }}
+          onSubmit={(values, actions) => {
+            setLoading(true);
+            fetch(`${base_url}/api/auth/register`, {
+              method: "POST",
+              body: JSON.stringify({
+                email: values.email,
+                password: values.password,
+              }),
+            })
+              .then(async (res) => {
+                const content = await res.json();
+                if (res.status) {
+                  router.push("/login");
+                }
+              })
+              .finally(() => {
+                setLoading(false);
+              });
+          }}
+          validationSchema={schema}
+        >
+          {(props) => (
+            <form onSubmit={props.handleSubmit}>
+              <div className="d-flex flex-wrap" style={{ maxWidth: "600px" }}>
+                <TextField
+                  fullWidth
+                  label="Email"
+                  variant="standard"
+                  name="email"
+                  onChange={(val) => {
+                    props.setFieldValue("email", val.target.value);
+                  }}
+                />
 
-              <TextField
-                variant="outlined"
-                size="small"
-                label="password"
-                fullWidth
-                type="password"
-                onChange={(e) => {
-                  props.setFieldValue("password", e.target.value);
-                }}
-                sx={{ mb: "10px" }}
-                error={Boolean(props.errors.password)}
-              />
+                <TextField
+                  name="password"
+                  fullWidth
+                  label="Password"
+                  variant="standard"
+                  type="password"
+                  onChange={(val) => {
+                    props.setFieldValue("password", val.target.value);
+                  }}
+                />
 
-              <TextField
-                variant="outlined"
-                size="small"
-                label="confirm password"
-                fullWidth
-                type="password"
-                onChange={(e) => {
-                  props.setFieldValue("confirmPassword", e.target.value);
-                }}
-                sx={{ mb: "10px" }}
-                error={Boolean(props.errors.confirmPassword)}
-              />
+                <TextField
+                  name="passwordConfirm"
+                  fullWidth
+                  label="Confirm password"
+                  variant="standard"
+                  type="password"
+                  onChange={(val) => {
+                    props.setFieldValue("passwordConfirm", val.target.value);
+                  }}
+                />
 
-              <Button
-                disabled={loading}
-                fullWidth
-                type="submit"
-                variant="contained"
-              >
-                Register
-              </Button>
-              {Object.values(props.errors).length > 0 && (
-                <Alert style={{ marginTop: "20px" }} severity="error">
-                  {Object.values(props.errors).join(", ")}
-                </Alert>
-              )}
-            </Grid>
-          </form>
-        )}
-      </Formik>
+                <Button
+                  style={{ width: "100%", marginTop: "10px" }}
+                  disabled={loading}
+                  type="submit"
+                  className="w-100 mt-3"
+                  variant="contained"
+                >
+                  Register
+                </Button>
+                <Link href={"/login"}>Have acount? Login</Link>
+              </div>
+            </form>
+          )}
+        </Formik>
+      </div>
     </Container>
   );
-};
+}
 
-export default RegisterPage;
+export default Register;

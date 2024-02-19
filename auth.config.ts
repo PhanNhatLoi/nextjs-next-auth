@@ -5,26 +5,20 @@ import { compareSync } from "bcrypt-ts";
 
 export default {
   providers: [
-    // login with username and password
     CredentialsProvider({
-      name: "Credentials",
       credentials: {
         email: {},
         password: {},
       },
       async authorize(credentials) {
         if (credentials.email && credentials.password) {
-          const user = await Users.findOne({ email: credentials.email });
-          if (!user) {
-            return null;
+          const user = await Users.findOne({ email: credentials?.email || "" });
+          const password = credentials.password || "";
+          const isMatch = await compareSync(password.toString(), user.password);
+          if (isMatch) {
+            return user;
           }
-          const isMatch = compareSync(
-            credentials?.password.toString(),
-            user.password
-          );
-          if (isMatch) return user;
         }
-
         return null;
       },
     }),

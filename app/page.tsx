@@ -1,16 +1,8 @@
-// "use client";
-import { auth } from "@/auth";
-import { Container } from "@mui/material";
+"use client";
 import React from "react";
 
-const HomePage = async () => {
-  // const session = await auth();
-  return (
-    <Container sx={{ mt: 3 }}>
-      HomePage
-      {/* <div>{JSON.stringify(session)}</div> */}
-    </Container>
-  );
-};
+function HomePage() {
+  return <div>HomePage</div>;
+}
 
 export default HomePage;
