@@ -5,7 +5,7 @@ import { Alert, Button, Container, TextField, Typography } from "@mui/material";
 import * as Yup from "yup";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+// import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import Link from "next/link";
 
 function Register() {
@@ -54,7 +54,7 @@ function Register() {
             })
               .then((res) => {
                 if (res?.ok || !res?.error) {
-                  router.push(DEFAULT_LOGIN_REDIRECT);
+                  router.push("/profile");
                 }
                 if (res?.error) {
                   switch (res?.error) {
