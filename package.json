@@ -13,7 +13,7 @@
     "@mui/material": "^5.15.10",
     "add": "^2.0.6",
     "bcrypt-ts": "^5.0.1",
-    "dotenv": "^16.4.4",
+    "dotenv": "^16.4.5",
     "dotenv-webpack": "^8.0.1",
     "formik": "^2.4.5",
     "mongoose": "^8.1.3",

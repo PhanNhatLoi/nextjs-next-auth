@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
 import authConfig from "@/auth.config";
-import Users from "./src/models/userModel";
 
 export const {
   handlers: { GET, POST },
