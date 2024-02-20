@@ -1,3 +1,10 @@
 {
-  "rewrites": [{ "source": "/api/:path*", "destination": "/api/:path*" }]
+  "version": 1,
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/",
+      "methods": ["GET", "POST", "PUT", "OPTIONS"]
+    }
+  ]
 }
