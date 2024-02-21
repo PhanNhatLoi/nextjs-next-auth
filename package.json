@@ -5,7 +5,7 @@
   "scripts": {
     "build": "next build",
     "postinstall": "yarn build && yarn start",
-    "start": "null",
+    "start": "node ./scripts/next.js",
     "dev": "node ./scripts/next.js",
     "lint": "next lint"
   },
