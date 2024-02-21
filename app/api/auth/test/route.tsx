@@ -8,5 +8,6 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request) {
   const users = await Users.find({});
+
   return Response.json({ users: users });
 }
