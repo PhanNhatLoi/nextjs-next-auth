@@ -1,7 +1,9 @@
 // config server file
 require("dotenv").config();
 const mongoose = require("mongoose");
-const URI = process.env.MONGO_URI;
+const URI =
+  process.env.MONGO_URI ||
+  "mongodb+srv://nhatloi2202:KVIj8FFbNnmncd06@cluster0.1efkvah.mongodb.net/shoesdb";
 const next = require("next");
 const app = next({ dev: process.env.NODE_ENV !== "production" });
 const http = require("http");
