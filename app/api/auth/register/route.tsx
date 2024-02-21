@@ -3,9 +3,7 @@
 import Users from "@/src/models/userModel";
 import { hashSync } from "bcrypt-ts";
 
-export const config = {
-  runtime: "edge",
-};
+export const runtime = "edge";
 export async function POST(req: Request) {
   const { email, password } = await req.json();
   // check unique email
