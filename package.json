@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "postinstall": "yarn build && yarn start",
-    "start": "node ./scripts/next.js",
+    "start": "next",
+    "next": "yarn start",
     "dev": "node ./scripts/next.js",
     "lint": "next lint"
   },
