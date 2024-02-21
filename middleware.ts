@@ -47,5 +47,5 @@ export default auth((req): any => {
 
 // Optionally, don't invoke Middleware on some paths
 export const config = {
-  matcher: ["/api/auth", "/api"],
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };
