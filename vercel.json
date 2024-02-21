@@ -8,10 +8,5 @@
         "Access-Control-Allow-Origin": "*"
       }
     }
-  ],
-  "functions": {
-    "/api/.*": {
-      "maxDuration": 60
-    }
-  }
+  ]
 }
