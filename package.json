@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "start": "node ./scripts/next.js",
-    "dev": "node ./scripts/next.js",
+    "start": "next start",
+    "dev": "next dev",
     "lint": "next lint"
   },
   "dependencies": {
@@ -18,6 +18,7 @@
     "dotenv": "^16.4.5",
     "dotenv-webpack": "^8.0.1",
     "formik": "^2.4.5",
+    "mongodb": "^6.3.0",
     "mongoose": "^8.1.3",
     "next": "14.1.0",
     "next-auth": "^5.0.0-beta.9",

@@ -1,36 +1,49 @@
 "use server";
-import Users from "@/src/models/userModel";
+import clientPromise from "@/lib/mongodb";
 import { compareSync } from "bcrypt-ts";
 
 export async function POST(req: Request) {
-  const { email, password } = await req.json();
-  // check unique email
-  const findUser = await Users.findOne({ email });
-  if (!findUser) {
+  try {
+    const { email, password } = await req.json();
+    const client = await clientPromise;
+    const db = client.db("shoesdb");
+    const collection = db.collection("users");
+    const user = await collection.findOne({ email });
+
+    if (!user) {
+      return Response.json(
+        {
+          errors: {
+            email: "Email not found!",
+          },
+        },
+        { status: 401 }
+      );
+    }
+    const isMatch = await compareSync(password.toString(), user.password);
+    if (!isMatch)
+      return Response.json(
+        {
+          errors: {
+            password: "password wrong!",
+          },
+        },
+        { status: 401 }
+      );
+    return Response.json(
+      {
+        user: user,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
     return Response.json(
       {
         errors: {
-          email: "Email not found!",
+          email: "Server Error",
         },
       },
       { status: 401 }
     );
   }
-  const user = await Users.findOne({ email: email || "" });
-  const isMatch = await compareSync(password.toString(), user.password);
-  if (!isMatch)
-    return Response.json(
-      {
-        errors: {
-          password: "password wrong!",
-        },
-      },
-      { status: 401 }
-    );
-  return Response.json(
-    {
-      user: user,
-    },
-    { status: 200 }
-  );
 }
