@@ -1,9 +1,9 @@
 import type { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 const base_url =
-  process.env.NODE_ENV !== "production"
-    ? "http://localhost:3000"
-    : "https://nextjs-next-auth-tau.vercel.app";
+  process.env.VERCEL_ENV !== "production"
+    ? `http://localhost:${process.env.PORT}`
+    : process.env.VERCEL_URL;
 
 export default {
   providers: [
