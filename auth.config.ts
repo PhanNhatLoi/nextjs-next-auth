@@ -1,7 +1,7 @@
 import type { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 const base_url =
-  process.env.VERCEL_ENV !== "production"
+  process.env.NODE_ENV !== "production"
     ? `http://localhost:${process.env.PORT}`
     : process.env.VERCEL_URL;
 
