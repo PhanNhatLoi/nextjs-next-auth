@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 const base_url =
   process.env.NODE_ENV !== "production"
     ? `http://localhost:${process.env.PORT}`
-    : process.env.VERCEL_URL;
+    : "https://nextjs-next-auth-tau.vercel.app";
 
 export default {
   providers: [
