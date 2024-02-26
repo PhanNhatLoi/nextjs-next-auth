@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Sell Shoes",
-  description: "Learn NextJs with sale web",
+  title: "NextJs | Next-auth",
+  description: "Authentication for Next.js",
 };
 
 export default async function RootLayout({
